@@ -13,7 +13,14 @@ app.use(express.json());
 //write todo
 app.post("/todos", async(req, res) => {
     try {
-        console.log(req.body)
+        //deconstructing description variable from req.body
+        const {description} = req.body;
+        //creating query variable that will directly access our pool database command...
+        //also using 
+        const newToDo = await pool.query(
+            "INSERT INTO todo (description) VALUES ($1) RETURNING *",
+            [description])
+        res.json(newToDo.rows[0])
     } catch (err) {
         console.error(err.message)
     }
